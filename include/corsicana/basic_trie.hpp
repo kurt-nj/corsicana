@@ -1,6 +1,7 @@
 #ifndef CORSICANA_BASIC_TRIE_HPP
 #define CORSICANA_BASIC_TRIE_HPP
 
+#include <initializer_list>
 #include "corsicana/match.hpp"
 #include "corsicana/internal/data.hpp"
 
@@ -24,7 +25,7 @@ public:
     }
 
 private:
-    corsicana::data<T> data;
+    corsicana::internal::data<T> data;
 };
 
 } // namespace corsicana

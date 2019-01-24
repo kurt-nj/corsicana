@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 namespace corsicana {
+namespace internal {
 
 template <class T>
 struct node {
@@ -15,6 +16,7 @@ struct node {
     node<T>* dict_suffix_link = nullptr;
 };
 
+} // namespace internal
 } // namespace corsicana
 
 #endif //CORSICANA_INTERNAL_NODE_HPP

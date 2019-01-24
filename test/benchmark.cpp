@@ -1,31 +1,31 @@
 #include <chrono>
 #include <iostream>
-#include <set>
 #include <string>
 #include <vector>
-#include <map>
 #include "corsicana/trie.hpp"
 
-namespace ac = corsicana;
-using trie = ac::trie;
+static constexpr int ITERATIONS = 10;
+static constexpr int INPUT_COUNT = 10;
+static constexpr int INPUT_SIZE = 256;
+static constexpr int PATTERN_COUNT = 1000000;
+static constexpr int PATTERN_SIZE = 8;
 
-using namespace std;
+using ms = std::chrono::milliseconds;
 
-string gen_str(size_t len) {
-    static const char alphanum[] =
-    "0123456789"
-    "!@#$%^&*"
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "abcdefghijklmnopqrstuvwxyz";
+std::string generate(size_t len) {
+    static const std::string alphanum =
+        "0123456789!@#$%^&*ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-    string str;
-    for (int i = 0; i < len; ++i) {
-        str.append(1, alphanum[rand() % (sizeof(alphanum) - 1)]);
+    std::string str;
+    for (size_t i = 0; i < len; ++i) {
+        auto place = static_cast<size_t>(rand()) % (sizeof(alphanum) - 1);
+        str += alphanum[place];
     }
-    return string(str);
+    return str;
 }
 
-size_t bench_naive(vector<string> const& text_strings, vector<string> const& patterns) {
+size_t bench_naive(std::vector<std::string> const& text_strings,
+                   std::vector<std::string> const& patterns) {
     size_t count = 0;
     for (auto const& text : text_strings) {
         for (auto const& pattern : patterns) {
@@ -39,7 +39,8 @@ size_t bench_naive(vector<string> const& text_strings, vector<string> const& pat
     return count;
 }
 
-size_t bench_aho_corasick(vector<string> const& text_strings, trie const& t) {
+size_t bench_corsicana(std::vector<std::string> const& text_strings,
+                       corsicana::trie const& t) {
     size_t count = 0;
     for (auto const& text : text_strings) {
         auto matches = t.match(text).all();
@@ -48,62 +49,51 @@ size_t bench_aho_corasick(vector<string> const& text_strings, trie const& t) {
     return count;
 }
 
-int main(int argc, char** argv) {
-    cout << "*** Aho-Corasick Benchmark ***" << endl;
+int main() {
+    std::cout << "*** Corsicana Benchmark ***" << std::endl;
 
-    cout << "Generating input text ...";
-    set<string> input_strings;
-    while (input_strings.size() < 10) {
-        input_strings.insert(gen_str(256));
+    std::cout << "Generating input text ..." << std::endl;
+    std::vector<std::string> inputs;
+    for (int x=0; x<INPUT_COUNT; x++) {
+        inputs.push_back(generate(INPUT_SIZE));
     }
-    vector<string> input_vector(input_strings.begin(), input_strings.end());
-    cout << " done" << endl;
 
-    cout << "Generating search patterns ...";
-    set<string> patterns;
-    while (patterns.size() < 1000000) {
-        patterns.insert(gen_str(8));
+    std::cout << "Generating search patterns ..." << std::endl;
+    std::vector<std::string> patterns;
+    for (int x=0; x<PATTERN_COUNT; x++) {
+        patterns.push_back(generate(PATTERN_SIZE));
     }
-    vector<string> pattern_vector(patterns.begin(), patterns.end());
-    cout << " done" << endl;
 
-    cout << "Generating trie ...";
-    trie t;
-    for (auto& pattern : patterns) {
+    std::cout << "Building trie..." << std::endl;
+    auto trie_start = std::chrono::high_resolution_clock::now();
+    corsicana::trie t;
+    for (auto const& pattern : patterns) {
         t.insert(pattern);
     }
     t.freeze();
-    cout << " done" << endl;
+    auto trie_end = std::chrono::high_resolution_clock::now();
+    auto trie_time = trie_end - trie_start;
+    std::cout << "trie build time: " << std::chrono::duration_cast<ms>(trie_time).count() << "ms" << std::endl;
 
-    map<size_t, tuple<chrono::high_resolution_clock::duration, chrono::high_resolution_clock::duration>> timings;
+    std::cout << "Running Benchmarks..." << std::endl;
+    for (int x=0; x<ITERATIONS; x++) {
+        std::cout << "Iteration #" << x;
+        auto naive_start = std::chrono::high_resolution_clock::now();
+        size_t count_1 = bench_naive(inputs, patterns);
+        auto naive_end = std::chrono::high_resolution_clock::now();
+        auto naive_time = naive_end - naive_start;
+        std::cout << " naive: " << std::chrono::duration_cast<ms>(naive_time).count() << "ms";
 
-    cout << "Running ";
-    for (size_t i = 10; i > 0; --i) {
-        cout << ".";
-        auto start_time = chrono::high_resolution_clock::now();
-        size_t count_1 = bench_naive(input_vector, pattern_vector);
-        auto end_time = chrono::high_resolution_clock::now();
-        auto time_1 = end_time - start_time;
-
-        start_time = chrono::high_resolution_clock::now();
-        size_t count_2 = bench_aho_corasick(input_vector, t);
-        end_time = chrono::high_resolution_clock::now();
-        auto time_2 = end_time - start_time;
+        auto corsicana_start = std::chrono::high_resolution_clock::now();
+        size_t count_2 = bench_corsicana(inputs, t);
+        auto corsicana_end = std::chrono::high_resolution_clock::now();
+        auto corsicana_time = corsicana_end - corsicana_start;
+        std::cout << " corsicana: " << std::chrono::duration_cast<ms>(corsicana_time).count() << "ms";
 
         if (count_1 != count_2) {
-            cout << "failed" << endl;
+            std::cout << " !!!FAILURE!!!" << std::endl;
         }
-
-        timings[i] = make_tuple(time_1, time_2);
-    }
-    cout << " done" << endl;
-
-    cout << "Results: " << endl;
-    for (auto& i : timings) {
-        cout << "  loop #" << i.first;
-        cout << ", naive: " << chrono::duration_cast<chrono::milliseconds>(get<0>(i.second)).count();
-        cout << "ms, ac: " << chrono::duration_cast<chrono::milliseconds>(get<1>(i.second)).count() << "ms";
-        cout << endl;
+        std::cout << std::endl;
     }
 
     return 0;
