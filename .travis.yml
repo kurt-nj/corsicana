@@ -1,0 +1,27 @@
+language: cpp
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.9
+      - g++-5
+      - g++-6
+matrix:
+  include:
+    - os: linux
+      sudo: false
+      env: GCC_VER="4.9"
+      compiler: gcc
+    - os: linux
+      sudo: false
+      env: GCC_VER="5"
+      compiler: gcc
+    - os: linux
+      sudo: false
+      env: GCC_VER="6"
+      compiler: gcc
+script:
+  - cmake  .
+  - cmake --build . -- -j2
+  - ctest
