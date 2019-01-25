@@ -1,5 +1,7 @@
 
-
+##############################################
+# Test Source
+##############################################
 SET(TEST_SRC
     test_main.cpp
     test_match.cpp
@@ -19,14 +21,19 @@ set(COMPILER_FLAGS
     -Wconversion
     -Wsign-conversion
     -Wformat=2
-    -Werror
 )
 
+##############################################
+# Unit Test Executable (Catch2)
+##############################################
 add_executable(corsicana_test ${TEST_SRC})
 target_link_libraries(corsicana_test corsicana)
 target_compile_options(corsicana_test PUBLIC ${COMPILER_FLAGS})
 add_test(NAME corsicana_test COMMAND $<TARGET_FILE:corsicana_test>)
 
+##############################################
+# Benchmark Executable
+##############################################
 add_executable(benchmark benchmark.cpp)
 target_link_libraries(benchmark corsicana)
 target_compile_options(benchmark PUBLIC ${COMPILER_FLAGS})
