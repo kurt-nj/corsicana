@@ -35,7 +35,7 @@ public:
             bool operator==(const iterator& rhs) const { return state == rhs.state; }
             bool operator!=(const iterator& rhs) const { return state != rhs.state; }
         private:
-            iterator(corsicana::internal::match_state<T> state) : state(state) {}
+            iterator(corsicana::internal::match_state<T> state_in) : state(state_in) {}
             corsicana::internal::match_state<T> state;
     };
 
@@ -68,8 +68,8 @@ public:
     }
 
 private:
-    match(T const& text, const corsicana::internal::data<T>& data) :
-        text(text),
+    match(T const& text_in, const corsicana::internal::data<T>& data) :
+        text(text_in),
         const_data(data) {}
 
     T text;
