@@ -53,7 +53,8 @@ matrix:
             - g++-7
             - lcov
       env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && CODE_COVERAGE=ON"
+        - CODE_COVERAGE=ON
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
     ############################################
     # OSX Builds
     ############################################
@@ -69,7 +70,7 @@ matrix:
 before_install:
   - eval "${MATRIX_EVAL}"
 script:
-  - cmake -DCODE_COVERAGE=$CODE_COVERAGE .
+  - cmake -DCODE_COVERAGE=${CODE_COVERAGE} .
   - cmake --build . -- -j2
   - ctest
   # code coverage should only be turned on for one matrix
