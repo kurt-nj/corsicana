@@ -14,8 +14,8 @@ public:
     using TValue = typename T::value_type;
     using TSize = typename T::size_type;
 
-    match_state(T const& text, data<T> const& data, bool end=false) :
-            text(text),
+    match_state(T const& text_in, data<T> const& data, bool end=false) :
+            text(text_in),
             const_data(data),
             current_node(data.root_node()) {
         if (end) {
@@ -58,7 +58,7 @@ public:
                 auto it = current_node->children.find(current_char);
                 // if we can continue following the trie, do
                 if (it != current_node->children.end()) {
-                    current_node = &it->second;
+                    current_node = it->second.get();
                     break;
                 }
 
@@ -94,9 +94,9 @@ public:
 
 private:
 
-    const T& text;
+    T const& text;
     TSize text_position = 0;
-    const data<T>& const_data;
+    data<T> const& const_data;
     const node<TValue>* current_node;
     const node<TValue>* current_dict_match = nullptr;
     int current_word_index = 0;
