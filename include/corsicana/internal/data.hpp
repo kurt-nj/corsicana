@@ -42,7 +42,7 @@ public:
             calc_suffix(node);
 
             for (auto& child : node->children) {
-                dfs.push(&child.second);
+                dfs.push(child.second.get());
             }
         }
         frozen = true;
@@ -57,16 +57,16 @@ private:
 
             auto current = &root;
             for (TValue c : str) {
-                // look for next character
+                // look for next character=
                 auto it = current->children.find(c);
                 if (it == current->children.end()) {
                     // create a new node if this character doesn't yet exist
-                    node<TValue> node;
-                    node.value = c;
-                    node.parent = current;
-                    current->children.emplace(c,node);
+                    std::unique_ptr<node<TValue>> node(new corsicana::internal::node<TValue>());
+                    node->value = c;
+                    node->parent = current;
+                    current->children.emplace(c,std::move(node));
                 }
-                current = &current->children[c];
+                current = current->children[c].get();
             }
             // the node is the end of our word
             current->word_index = pair.first;
@@ -92,7 +92,7 @@ private:
             while(node->suffix_link == nullptr) {
                 auto it = current_best->children.find(current_val);
                 if (it != current_best->children.end()) {
-                    node->suffix_link = &it->second;
+                    node->suffix_link = it->second.get();
                 }
                 else if (current_best == &root) {
                     node->suffix_link = current_best;
