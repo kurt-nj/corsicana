@@ -27,22 +27,13 @@ size_t bench_naive(std::vector<std::string> const& text_strings,
                    std::vector<std::string> const& patterns) {
     size_t count = 0;
     for (auto const& text : text_strings) {
-        size_t tcount = 0;
         for (auto const& pattern : patterns) {
-            size_t pcount = 0;
             size_t pos = text.find(pattern);
             while (pos != std::string::npos) {
                 count++;
-                pcount++;
-                tcount++;
                 pos = text.find(pattern, pos+1);
             }
-
-            if (pcount > 0) {
-                //std::cout << text << ":" << pattern << ":" << pcount << std::endl;
-            }
         }
-        //std::cout << text << ":" << tcount << std::endl;
     }
     return count;
 }
@@ -53,7 +44,6 @@ size_t bench_corsicana(std::vector<std::string> const& text_strings,
     for (auto const& text : text_strings) {
         auto matches = t.match(text).all();
         count += matches.size();
-        //std::cout << text << ":" << matches.size() << std::endl;
     }
     return count;
 }
@@ -81,7 +71,7 @@ void benchmark(std::string const& seed) {
     std::vector<std::string> patterns(pattern_set.begin(), pattern_set.end());
 
     std::cout << "Building trie..." << std::endl;
-    auto trie_start = std::chrono::high_resolution_clock::now();
+    auto trie_start = high_resolution_clock::now();
     corsicana::trie t;
     for (auto const& pattern : patterns) {
         t.insert(pattern);
@@ -95,9 +85,9 @@ void benchmark(std::string const& seed) {
     for (int x=0; x<ITERATIONS; x++) {
         std::cout << "Iteration #" << x;
         // naive run and measurements
-        auto naive_start = std::chrono::high_resolution_clock::now();
+        auto naive_start = high_resolution_clock::now();
         size_t count_1 = bench_naive(inputs, patterns);
-        auto naive_end = std::chrono::high_resolution_clock::now();
+        auto naive_end = high_resolution_clock::now();
         auto naive_time = naive_end - naive_start;
         std::cout << " naive: " << duration_cast<milliseconds>(naive_time).count() << "ms matches: " << count_1;
 
