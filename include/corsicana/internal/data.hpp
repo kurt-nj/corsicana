@@ -45,7 +45,6 @@ public:
                 dfs.push(child.second.get());
             }
         }
-        frozen = true;
     }
 
 private:
@@ -112,7 +111,6 @@ private:
 
     node<TValue> root;
     std::unordered_map<int,T> dictionary;
-    bool frozen = false;
     int counter = 0;
 };
 } // namespace internal
