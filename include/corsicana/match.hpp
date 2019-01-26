@@ -16,10 +16,15 @@ public:
 
     friend class basic_trie<T>;
 
-    class iterator : public std::iterator<std::forward_iterator_tag, T>
+    class iterator : public std::iterator<std::input_iterator_tag, T>
     {
         public:
             friend class corsicana::match<T>;
+
+            iterator(iterator const&) = default;
+            iterator(iterator&&) = default;
+            iterator& operator=(iterator const&) = default;
+            iterator& operator=(iterator&&) = default;
 
             iterator& operator++() {
                 state.next();
@@ -32,6 +37,7 @@ public:
             }
 
             T const& operator*() const { return state.current(); }
+            const T* operator->() const { return &state.current(); }
             bool operator==(const iterator& rhs) const { return state == rhs.state; }
             bool operator!=(const iterator& rhs) const { return state != rhs.state; }
         private:

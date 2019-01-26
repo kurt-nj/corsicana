@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "corsicana/trie.hpp"
 #include <iostream>
+#include <utility>
 
 using namespace Catch::Matchers;
 
@@ -48,6 +49,34 @@ TEST_CASE("Match Iterator", "[corsicana.match.iterator]") {
     SECTION("no matches") {
         auto match = t.match("santamaria");
         REQUIRE(match.begin() == match.end());
+    }
+    SECTION("iterator dereference") {
+        auto match = t.match("ushers");
+        auto it = match.begin();
+        REQUIRE(*it == "she");
+        REQUIRE(it->compare("she") == 0);
+    }
+    SECTION("iterator copy") {
+        auto match = t.match("ushers");
+        auto it = match.begin();
+        corsicana::match<std::string>::iterator copy = it;
+        REQUIRE(it == copy);
+    }
+    SECTION("iterator copy assignment") {
+        auto match = t.match("ushers");
+        auto it = match.begin();
+        corsicana::match<std::string>::iterator copy(it);
+        REQUIRE(it == copy);
+    }
+    SECTION("iterator is swappable") {
+        REQUIRE(std::is_move_assignable<corsicana::match<std::string>::iterator>::value);
+        std::vector<std::string> expected = { "she", "he", "hers" };
+        auto match = t.match("ushers");
+        auto it1 = match.begin();
+        auto it2 = match.end();
+        std::swap(it1, it2);
+        REQUIRE(it1 == match.end());
+        REQUIRE(it2 == match.begin());
     }
 }
 
