@@ -1,31 +1,32 @@
 #ifndef CORSICANA_BASIC_TRIE_HPP
 #define CORSICANA_BASIC_TRIE_HPP
 
-#include <initializer_list>
 #include "corsicana/match.hpp"
 #include "corsicana/internal/data.hpp"
 
 namespace corsicana {
 
+// forward declaration
+template<class T>
+class basic_trie_builder;
+
 template <typename T>
 class basic_trie {
 public:
 
-    basic_trie<T>& insert(T const& str) {
-        data.insert(str);
-        return *this;
-    }
-
-    void freeze() {
-        data.freeze();
-    }
+    friend class basic_trie_builder<T>;
 
     corsicana::match<T> match(T const& text) const {
-        return corsicana::match<T>(text, data);
+        return corsicana::match<T>(text, *data);
     }
 
 private:
-    corsicana::internal::data<T> data;
+
+    basic_trie(std::unique_ptr<internal::data<T>> data_in) {
+        data = std::move(data_in);
+    }
+
+    std::unique_ptr<internal::data<T>> data;
 };
 
 } // namespace corsicana

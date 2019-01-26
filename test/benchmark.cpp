@@ -11,9 +11,6 @@ static constexpr int INPUT_SIZE = 256;
 static constexpr int PATTERN_COUNT = 1000000;
 static constexpr int PATTERN_SIZE = 8;
 
-static const std::string NUMBERS = "0123456789";
-static const std::string ALPHANUM = "0123456789!@#$%^&*ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
 std::string generate(size_t len, std::string const& seed) {
     std::string str;
     for (size_t i = 0; i < len; ++i) {
@@ -72,11 +69,11 @@ void benchmark(std::string const& seed) {
 
     std::cout << "Building trie..." << std::endl;
     auto trie_start = high_resolution_clock::now();
-    corsicana::trie t;
+    corsicana::trie_builder tbuild;
     for (auto const& pattern : patterns) {
-        t.insert(pattern);
+        tbuild.insert(pattern);
     }
-    t.freeze();
+    corsicana::trie t = tbuild.build();
     auto trie_end = high_resolution_clock::now();
     auto trie_time = trie_end - trie_start;
     std::cout << "trie build time: " << duration_cast<milliseconds>(trie_time).count() << "ms" << std::endl;
@@ -106,6 +103,9 @@ void benchmark(std::string const& seed) {
 }
 
 int main() {
+
+    static const std::string NUMBERS = "0123456789";
+    static const std::string ALPHANUM = "0123456789!@#$%^&*ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     // benchmark against a semi complete ASCII seed
     // this benchmarks the case of no matches (probably)
