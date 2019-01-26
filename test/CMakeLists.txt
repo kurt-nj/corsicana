@@ -27,9 +27,17 @@ set(COMPILER_FLAGS
 # Unit Test Executable (Catch2)
 ##############################################
 add_executable(corsicana_test ${TEST_SRC})
-target_link_libraries(corsicana_test corsicana)
+target_link_libraries(corsicana_test PUBLIC corsicana)
 target_compile_options(corsicana_test PUBLIC ${COMPILER_FLAGS})
 add_test(NAME corsicana_test COMMAND $<TARGET_FILE:corsicana_test>)
+
+##############################################
+# Generate code coverage
+##############################################
+if(CODE_COVERAGE)
+    target_compile_options(corsicana_test PUBLIC -O0 -g --coverage)
+    target_link_libraries(corsicana_test PUBLIC gcov --coverage)
+endif(CODE_COVERAGE)
 
 ##############################################
 # Benchmark Executable
