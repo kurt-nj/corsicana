@@ -40,6 +40,17 @@ TEST_CASE("Match State Equals", "[match_state.==]") {
     }
 }
 
-TEST_CASE("Match State Next", "[match_state.next]") {
-
+TEST_CASE("Match State Copy", "[match_state.=") {
+    corsicana::internal::data<std::string> mydata;
+    std::string text = "HELLO WORLD";
+    SECTION("copy constructor") {
+        auto orig = corsicana::internal::match_begin(text,mydata);
+        corsicana::internal::match_state<std::string> copy(orig);
+        REQUIRE(copy == orig);
+    }
+    SECTION("copy assignment") {
+        auto orig = corsicana::internal::match_begin(text,mydata);
+        corsicana::internal::match_state<std::string> copy = orig;
+        REQUIRE(copy == orig);
+    }
 }

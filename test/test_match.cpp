@@ -49,6 +49,24 @@ TEST_CASE("Match Iterator", "[corsicana.match.iterator]") {
         auto match = t.match("santamaria");
         REQUIRE(match.begin() == match.end());
     }
+    SECTION("iterator dereference") {
+        auto match = t.match("ushers");
+        auto it = match.begin();
+        REQUIRE(*it == "she");
+        REQUIRE(it->compare("she") == 0);
+    }
+    SECTION("iterator copy") {
+        auto match = t.match("ushers");
+        auto it = match.begin();
+        corsicana::match<std::string>::iterator copy = it;
+        REQUIRE(it == copy);
+    }
+    SECTION("iterator copy assignment") {
+        auto match = t.match("ushers");
+        auto it = match.begin();
+        corsicana::match<std::string>::iterator copy(it);
+        REQUIRE(it == copy);
+    }
 }
 
 // Test specifically for heavy overlap

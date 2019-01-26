@@ -22,6 +22,8 @@ public:
             text_position = text.size();
         }
     }
+    match_state(match_state<T> const&) = default;
+    match_state<T>& operator=(match_state<T> const&) = default;
 
     bool done() const {
         return(text_position == text.size() && current_dict_match == nullptr);
