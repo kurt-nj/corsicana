@@ -6,8 +6,8 @@
 using namespace Catch::Matchers;
 
 TEST_CASE("Match All", "[corsicana.match.all]") {
-    corsicana::trie t;
-    t.insert("hers").insert("his").insert("she").insert("he").freeze();
+    corsicana::trie_builder tbuild;
+    auto t = tbuild.insert("hers").insert("his").insert("she").insert("he").build();
     SECTION("matches") {
         std::vector<std::string> expected = { "she", "he", "hers" };
         auto all = t.match("ushers").all();
@@ -20,8 +20,8 @@ TEST_CASE("Match All", "[corsicana.match.all]") {
 }
 
 TEST_CASE("Match Count", "[corsicana.match.count]") {
-    corsicana::trie t;
-    t.insert("hers").insert("his").insert("she").insert("he").freeze();
+    corsicana::trie_builder tbuild;
+    auto t = tbuild.insert("hers").insert("his").insert("she").insert("he").build();
     SECTION("matches") {
         std::vector<std::string> expected = { "she", "he", "hers" };
         REQUIRE(t.match("ushers").count() == 3);
@@ -32,8 +32,8 @@ TEST_CASE("Match Count", "[corsicana.match.count]") {
 }
 
 TEST_CASE("Match Iterator", "[corsicana.match.iterator]") {
-    corsicana::trie t;
-    t.insert("hers").insert("his").insert("she").insert("he").freeze();
+    corsicana::trie_builder tbuild;
+    auto t = tbuild.insert("hers").insert("his").insert("she").insert("he").build();
     SECTION("matches") {
         std::vector<std::string> expected = { "she", "he", "hers" };
         auto match = t.match("ushers");
@@ -82,8 +82,8 @@ TEST_CASE("Match Iterator", "[corsicana.match.iterator]") {
 
 // Test specifically for heavy overlap
 TEST_CASE("Match Overlap") {
-    corsicana::trie t;
-    t.insert("he").insert("hehehehe").freeze();
+    corsicana::trie_builder tbuild;
+    auto t = tbuild.insert("he").insert("hehehehe").build();
     std::vector<std::string> expected = { "he", "he", "he", "hehehehe", "he", "hehehehe", "he" };
     REQUIRE_THAT(t.match("hehehehehe").all(), Equals(expected));
 }

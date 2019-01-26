@@ -3,10 +3,10 @@
 
 #include "corsicana/internal/match_state.hpp"
 #include "corsicana/internal/data.hpp"
-#include "corsicana/basic_trie.hpp"
 
 namespace corsicana {
 
+// forward declaration
 template <class T>
 class basic_trie;
 

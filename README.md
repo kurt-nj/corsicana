@@ -9,13 +9,12 @@ algorithm. It aims to be reasonably fast and thread safe.
 
 ### Trie Construction
 
-Construct a match trie in the following manner. The trie needs to be frozen before it can be searched.
-Once frozen, new patterns cannot be added and is now read only.
+Construct a match trie in the following manner. New patterns cannot be added to a trie once it is built.
 ```
-corsicana::trie my_trie;
-my_trie.insert("pattern one")
-       .insert("pattern two")
-       .freeze();
+corsicana::trie_builder my_trie_builder;
+auto my_trie = my_trie_builder.insert("pattern one")
+                              .insert("pattern two")
+                              .build();
 ```
 
 ### Matching
