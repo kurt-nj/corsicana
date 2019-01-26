@@ -22,7 +22,9 @@ public:
             friend class corsicana::match<T>;
 
             iterator(iterator const&) = default;
+            iterator(iterator&&) = default;
             iterator& operator=(iterator const&) = default;
+            iterator& operator=(iterator&&) = default;
 
             iterator& operator++() {
                 state.next();

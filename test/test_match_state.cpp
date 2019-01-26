@@ -53,4 +53,7 @@ TEST_CASE("Match State Copy", "[match_state.=") {
         corsicana::internal::match_state<std::string> copy = orig;
         REQUIRE(copy == orig);
     }
+    SECTION("movable") {
+        REQUIRE(std::is_move_assignable<corsicana::internal::match_state<std::string>>::value);
+    }
 }

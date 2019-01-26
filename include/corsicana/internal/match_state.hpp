@@ -15,25 +15,27 @@ public:
     using TSize = typename T::size_type;
 
     match_state(T const& text_in, data<T> const& data, bool end=false) :
-            text(text_in),
-            const_data(data),
+            text(&text_in),
+            const_data(&data),
             current_node(data.root_node()) {
         if (end) {
-            text_position = text.size();
+            text_position = text->size();
         }
     }
     match_state(match_state<T> const&) = default;
+    match_state(match_state<T>&&) = default;
     match_state<T>& operator=(match_state<T> const&) = default;
+    match_state<T>& operator=(match_state<T>&&) = default;
 
     bool done() const {
-        return(text_position == text.size() && current_dict_match == nullptr);
+        return(text_position == text->size() && current_dict_match == nullptr);
     }
 
     bool operator==(match_state<T> const& rhs) const {
         // verify that this is the same trie
-        if (&const_data != &rhs.const_data) { return false; }
+        if (const_data != rhs.const_data) { return false; }
         // verify that this is the same search
-        if (&text != &rhs.text) { return false; }
+        if (text != rhs.text) { return false; }
         // verify that we are at the same position
         if (text_position != rhs.text_position) { return false; }
         if (current_dict_match != rhs.current_dict_match) { return false; }
@@ -52,8 +54,8 @@ public:
             return true;
         }
 
-        while (text_position < text.size()) {
-            auto current_char = text[text_position];
+        while (text_position < text->size()) {
+            auto current_char = text->operator[](text_position);
             text_position++;
 
             while(true) {
@@ -65,7 +67,7 @@ public:
                 }
 
                 // if we are at the root, well this character just isn't here
-                if (current_node == const_data.root_node()) {
+                if (current_node == const_data->root_node()) {
                     break;
                 }
 
@@ -91,14 +93,14 @@ public:
     }
 
     T const& current() const {
-        return const_data.get(current_word_index);
+        return const_data->get(current_word_index);
     }
 
 private:
 
-    T const& text;
+    const T* text;
     TSize text_position = 0;
-    data<T> const& const_data;
+    const data<T>* const_data;
     const node<TValue>* current_node;
     const node<TValue>* current_dict_match = nullptr;
     int current_word_index = 0;
