@@ -22,9 +22,9 @@ public:
             friend class corsicana::match<T>;
 
             iterator(iterator const&) = default;
-            iterator(iterator&&) = default;
+            iterator(iterator&&) noexcept = default;
             iterator& operator=(iterator const&) = default;
-            iterator& operator=(iterator&&) = default;
+            iterator& operator=(iterator&&) noexcept = default;
 
             iterator& operator++() {
                 state.next();
@@ -41,7 +41,7 @@ public:
             bool operator==(const iterator& rhs) const { return state == rhs.state; }
             bool operator!=(const iterator& rhs) const { return state != rhs.state; }
         private:
-            iterator(corsicana::internal::match_state<T> state_in) : state(state_in) {}
+            explicit iterator(corsicana::internal::match_state<T> state_in) : state(state_in) {}
             corsicana::internal::match_state<T> state;
     };
 

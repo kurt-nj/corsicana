@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <random>
 #include "corsicana/trie.hpp"
 
 static constexpr int ITERATIONS = 4;
@@ -12,10 +13,13 @@ static constexpr int PATTERN_COUNT = 1000000;
 static constexpr int PATTERN_SIZE = 8;
 
 std::string generate(size_t len, std::string const& seed) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<size_t> dis(0, seed.size()-1);
+
     std::string str;
-    for (size_t i = 0; i < len; ++i) {
-        auto place = static_cast<size_t>(rand()) % (seed.size() - 1);
-        str += seed[place];
+    for (size_t i=0; i<len; ++i) {
+        str += seed[dis(gen)];
     }
     return str;
 }

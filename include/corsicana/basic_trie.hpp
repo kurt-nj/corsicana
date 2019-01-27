@@ -22,7 +22,7 @@ public:
 
 private:
 
-    basic_trie(std::unique_ptr<internal::data<T>> data_in) {
+    explicit basic_trie(std::unique_ptr<internal::data<T>> data_in) {
         data = std::move(data_in);
     }
 

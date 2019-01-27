@@ -23,9 +23,9 @@ public:
         }
     }
     match_state(match_state<T> const&) = default;
-    match_state(match_state<T>&&) = default;
+    match_state(match_state<T>&&) noexcept = default;
     match_state<T>& operator=(match_state<T> const&) = default;
-    match_state<T>& operator=(match_state<T>&&) = default;
+    match_state<T>& operator=(match_state<T>&&) noexcept = default;
 
     bool done() const {
         return(text_position == text->size() && current_dict_match == nullptr);
