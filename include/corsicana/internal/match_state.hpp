@@ -25,9 +25,9 @@ public:
         }
     }
     match_state(match_state<T> const&) = default;
-    match_state(match_state<T>&&) = default;
+    match_state(match_state<T>&&) noexcept = default;
     match_state<T>& operator=(match_state<T> const&) = default;
-    match_state<T>& operator=(match_state<T>&&) = default;
+    match_state<T>& operator=(match_state<T>&&) noexcept = default;
 
     // Returns true if search position is at the final spot
     bool done() const {
@@ -63,7 +63,7 @@ public:
         // continue from where we stopped last
         while (text_position < text->size()) {
             auto current_char = text->operator[](text_position);
-            text_position++;
+            ++text_position;
 
             while(true) {
                 auto it = current_node->children.find(current_char);
