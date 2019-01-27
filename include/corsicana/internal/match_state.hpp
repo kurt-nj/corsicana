@@ -56,7 +56,7 @@ public:
 
         while (text_position < text->size()) {
             auto current_char = text->operator[](text_position);
-            text_position++;
+            ++text_position;
 
             while(true) {
                 auto it = current_node->children.find(current_char);
