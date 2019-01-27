@@ -23,7 +23,6 @@ TEST_CASE("Match Count", "[corsicana.match.count]") {
     corsicana::trie_builder tbuild;
     auto t = tbuild.insert("hers").insert("his").insert("she").insert("he").build();
     SECTION("matches") {
-        std::vector<std::string> expected = { "she", "he", "hers" };
         REQUIRE(t.match("ushers").count() == 3);
     }
     SECTION("no matches") {
