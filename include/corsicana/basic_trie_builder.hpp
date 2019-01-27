@@ -6,15 +6,22 @@
 
 namespace corsicana {
 
+/// Constructs a new trie.
+/// In order for the Aho-Corasick algorithm to work,
+/// the trie structure has to be built and connected.
 template <typename T>
 class basic_trie_builder {
 public:
 
+    /// Insert a single element into the trie.
+    /// Returns a reference to itself to allow chaining
     basic_trie_builder<T>& insert(T const& str) {
         data->insert(str);
         return *this;
     }
 
+    /// Build and finalize the trie.
+    /// Returns a new basic_trie to perform match operations
     basic_trie<T> build() {
         data->freeze();
         // move over our trie data to it's new owner

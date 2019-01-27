@@ -7,6 +7,8 @@
 namespace corsicana {
 namespace internal {
 
+// Internal class that performs the Aho-Corasick algorithm and stores the current state information
+// API subject to change. Not intended for general usage.
 template <class T>
 class match_state {
 public:
@@ -27,6 +29,7 @@ public:
     match_state<T>& operator=(match_state<T> const&) = default;
     match_state<T>& operator=(match_state<T>&&) = default;
 
+    // Returns true if search position is at the final spot
     bool done() const {
         return(text_position == text->size() && current_dict_match == nullptr);
     }
@@ -47,13 +50,17 @@ public:
         return !(*this == rhs);
     }
 
+    // Go to the next match if any.
+    // Returns true if a match is found, false if we reach the end
     bool next() {
+        // start by looking at the dict suffix
+        // we need to exhaust all of our suffix links before searching further
         if (current_dict_match != nullptr) {
             current_word_index = current_dict_match->word_index;
             current_dict_match = current_dict_match->dict_suffix_link;
             return true;
         }
-
+        // continue from where we stopped last
         while (text_position < text->size()) {
             auto current_char = text->operator[](text_position);
             text_position++;
@@ -75,12 +82,14 @@ public:
                 current_node = current_node->suffix_link;
             }
 
+            // if we hit the end of a word then stop there
             if (current_node->word_index > 0) {
                 current_word_index = current_node->word_index;
                 current_dict_match = current_node->dict_suffix_link;
                 return true;
             }
 
+            // if we hit dict suffix to a shorter word, then stop there
             if (current_node->dict_suffix_link != nullptr) {
                 current_dict_match = current_node->dict_suffix_link;
                 current_word_index = current_dict_match->word_index;
@@ -88,10 +97,12 @@ public:
                 return true;
             }
         }
+        // nothing left
         current_word_index = 0;
         return false;
     }
 
+    // Get the current word pointed at by the current match
     T const& current() const {
         return const_data->get(current_word_index);
     }

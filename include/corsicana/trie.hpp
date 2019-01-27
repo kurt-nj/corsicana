@@ -7,6 +7,11 @@
 
 namespace corsicana {
 
+// The main include for the Corsicana Aho-Corasick library.
+// This file declares some basic template instantiations for the standard strings.
+// Custom instantiations can also be created.
+// See the README for more details on how to use this library.
+
 using trie_builder = basic_trie_builder<std::string>;
 using trie = basic_trie<std::string>;
 
