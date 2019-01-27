@@ -10,12 +10,15 @@ namespace corsicana {
 template<class T>
 class basic_trie_builder;
 
+/// Holds the built Aho-Corasick trie
 template <typename T>
 class basic_trie {
 public:
 
     friend class basic_trie_builder<T>;
 
+    /// Perform a match search on the constructed trie.
+    /// At this point the trie data is read only.
     corsicana::match<T> match(T const& text) const {
         return corsicana::match<T>(text, *data);
     }

@@ -10,12 +10,17 @@ namespace corsicana {
 template <class T>
 class basic_trie;
 
+/// Class representing a single Aho-Corasick search.
+/// The Aho-Corasick search can be run multiple times on one match object
+/// but results are not saved off internally between queries.
 template <class T>
 class match {
 public:
 
     friend class basic_trie<T>;
 
+    /// Iterator implementation for matching
+    /// Implemented as a one-way input iterator
     class iterator : public std::iterator<std::input_iterator_tag, T>
     {
         public:
@@ -38,13 +43,14 @@ public:
 
             T const& operator*() const { return state.current(); }
             const T* operator->() const { return &state.current(); }
-            bool operator==(const iterator& rhs) const { return state == rhs.state; }
-            bool operator!=(const iterator& rhs) const { return state != rhs.state; }
+            bool operator==(iterator const& rhs) const { return state == rhs.state; }
+            bool operator!=(iterator const& rhs) const { return state != rhs.state; }
         private:
             iterator(corsicana::internal::match_state<T> state_in) : state(state_in) {}
             corsicana::internal::match_state<T> state;
     };
 
+    /// Returns the total total number of matches.
     int count() const {
         int count = 0;
         auto state = corsicana::internal::match_begin(text, const_data);
@@ -52,6 +58,7 @@ public:
         return count;
     }
 
+    /// Returns a vector of all matches.
     std::vector<T> all() const {
         std::vector<T> output;
         auto state = corsicana::internal::match_begin(text, const_data);
@@ -61,6 +68,7 @@ public:
         return output;
     }
 
+    /// Returns an iterator pointing to the first match.
     iterator begin() const {
         auto state = corsicana::internal::match_begin(text, const_data);
         // the begin iterator needs to already be pointing to the first element
@@ -68,6 +76,7 @@ public:
         return match<T>::iterator(state);
     }
 
+    /// Returns an iterator representing the search end.
     iterator end() const {
         auto state = corsicana::internal::match_end(text, const_data);
         return match<T>::iterator(state);
