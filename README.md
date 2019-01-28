@@ -1,6 +1,7 @@
 # Corsicana
 [![Build Status](https://travis-ci.org/kurt-nj/corsicana.svg?branch=master)](https://travis-ci.org/kurt-nj/corsicana)
 [![codecov](https://codecov.io/gh/kurt-nj/corsicana/branch/master/graph/badge.svg)](https://codecov.io/gh/kurt-nj/corsicana)
+[![Github Releases](https://img.shields.io/github/release/kurt-nj/corsicana.svg)](https://github.com/kurt-nj/corsicana/releases)
 
 A header only C++ implementation of the [Aho-Corasick](https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm)
 algorithm. It aims to be reasonably fast and thread safe.
