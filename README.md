@@ -37,8 +37,19 @@ There are a number of different ways to search on a frozen trie
 auto match = my_trie.match("Input Text");
 // get all matches at once
 vector<string> all = match.all();
+```
+```
+auto match = my_trie.match("Input Text");
 // get the count of matches
 int total = match.count();
+```
+```
+auto match = my_trie.match("Input Text");
+// return true if we can find any matches
+bool any_there = match.any();
+```
+```
+auto match = my_trie.match("Input Text");
 // or iterate over them one at a time
 for (auto const& m : match) {
     // iteration will search one at a time and can be stopped at any time
