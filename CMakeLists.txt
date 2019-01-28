@@ -33,4 +33,4 @@ endif(BUILD_TESTING)
 # Install target
 ###########################################################
 
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY include/ DESTINATION include/)
