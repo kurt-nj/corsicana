@@ -1,6 +1,5 @@
 #include "catch.hpp"
 #include "corsicana/trie.hpp"
-#include <iostream>
 
 using namespace Catch::Matchers;
 
