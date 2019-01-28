@@ -58,6 +58,13 @@ public:
         return count;
     }
 
+    /// Returns true if there is any match.
+    /// Will return after finding the first match and might not need to perform the full search
+    bool any() const {
+        auto state = corsicana::internal::match_begin(text, const_data);
+        return state.next();
+    }
+
     /// Returns a vector of all matches.
     std::vector<T> all() const {
         std::vector<T> output;

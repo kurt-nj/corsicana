@@ -30,6 +30,17 @@ TEST_CASE("Match Count", "[corsicana.match.count]") {
     }
 }
 
+TEST_CASE("Match Any", "[corsicana.match.any]") {
+    corsicana::trie_builder tbuild;
+    auto t = tbuild.insert("hers").insert("his").insert("she").insert("he").build();
+    SECTION("matches") {
+        REQUIRE(t.match("ushers").any());
+    }
+    SECTION("no matches") {
+        REQUIRE(!t.match("santamaria").any());
+    }
+}
+
 TEST_CASE("Match Iterator", "[corsicana.match.iterator]") {
     corsicana::trie_builder tbuild;
     auto t = tbuild.insert("hers").insert("his").insert("she").insert("he").build();
