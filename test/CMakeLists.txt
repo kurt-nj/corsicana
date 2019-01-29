@@ -8,6 +8,7 @@ SET(TEST_SRC
     test_match_state.cpp
     test_data.cpp
     test_basic_trie_builder.cpp
+    test_basic_trie.cpp
     test_trie_types.cpp
 )
 
