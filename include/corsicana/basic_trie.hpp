@@ -17,6 +17,9 @@ public:
 
     friend class basic_trie_builder<T>;
 
+    basic_trie(basic_trie<T>&&) noexcept = default;
+    basic_trie<T>& operator=(basic_trie<T>&&) noexcept = default;
+
     /// Perform a match search on the constructed trie.
     /// At this point the trie data is read only.
     corsicana::match<T> match(T const& text) const {
