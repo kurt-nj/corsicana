@@ -41,10 +41,3 @@ if(CODE_COVERAGE)
     target_compile_options(corsicana_test PUBLIC -O0 --coverage)
     target_link_libraries(corsicana_test PUBLIC gcov --coverage)
 endif(CODE_COVERAGE)
-
-##############################################
-# Benchmark Executable
-##############################################
-add_executable(benchmark benchmark.cpp)
-target_link_libraries(benchmark corsicana)
-target_compile_options(benchmark PUBLIC ${COMPILER_FLAGS})
