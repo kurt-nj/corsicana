@@ -14,6 +14,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(CODE_COVERAGE "Enable coverage reporting" OFF)
+option(BUILD_BENCHMARK "Enable benchmark building" ON)
 
 ##############################################
 # Corsicana Library
@@ -29,6 +30,13 @@ if(BUILD_TESTING)
     enable_testing()
     add_subdirectory(test)
 endif(BUILD_TESTING)
+
+##############################################
+# Benchmark Builds
+##############################################
+if(BUILD_BENCHMARK)
+    add_subdirectory(benchmark)
+endif(BUILD_BENCHMARK)
 
 ###########################################################
 # Install target

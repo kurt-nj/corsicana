@@ -62,6 +62,10 @@ for (auto const& m : match) {
 Tests are written using [Catch2](https://github.com/catchorg/Catch2) and can be executed by
 running `ctest` after building
 
+Testing can be disabled by setting BUILD_TESTING to OFF in cmake
+
 ## Benchmark
 
-A simple benchmark is included the test directory that compares against a simple naive text search.
+Benchmarks and a harness to write additional benchmarks is included in the benchmark directory. 
+
+Benchmarks can be disabled by setting BUILD_BENCHMARK to OFF in cmake
