@@ -21,19 +21,12 @@ public:
     // Should not get called after freezing
     void insert(T const& text) {
         if(!text.empty()) {
-            dictionary.emplace(++counter, text);
+            dictionary.emplace_back(text);
         }
     }
 
-    // Return the string from the dictionary for the given index.
-    // The index is stored in the final node of a word in the trie
-    T const& get(int index) const {
-        auto it = dictionary.find(index);
-        return it->second;
-    }
-
     // Returns a pointer to our root node
-    const corsicana::internal::node<TValue>* root_node() const {
+    const corsicana::internal::node<T>* root_node() const {
         return &root;
     }
 
@@ -43,7 +36,7 @@ public:
     void freeze() {
         build_trie();
         // perform a depth first search to search every node in order of depth
-        std::queue<node<TValue>*> dfs;
+        std::queue<node<T>*> dfs;
         dfs.push(&root);
         while (!dfs.empty()) {
             auto node = dfs.front();
@@ -57,12 +50,16 @@ public:
         }
     }
 
+    // Return the size of the dictionary
+    size_t size() const {
+        return dictionary.size();
+    }
+
 private:
 
     void build_trie() {
         // for each of our inserted strings, build our trie!
-        for (const auto& pair : dictionary) {
-            const auto& str = pair.second;
+        for (const auto& str : dictionary) {
 
             auto current = &root;
             for (TValue c : str) {
@@ -70,7 +67,7 @@ private:
                 auto it = current->children.find(c);
                 if (it == current->children.end()) {
                     // create a new node if this character doesn't yet exist
-                    std::unique_ptr<node<TValue>> node(new corsicana::internal::node<TValue>());
+                    std::unique_ptr<node<T>> node(new corsicana::internal::node<T>());
                     node->value = c;
                     node->parent = current;
                     current->children.emplace(c,std::move(node));
@@ -78,12 +75,12 @@ private:
                 current = current->children[c].get();
             }
             // the node is the end of our word
-            current->word_index = pair.first;
+            current->word = &str;
         }
     }
 
 
-    void calc_suffix(corsicana::internal::node<TValue>* node) {
+    void calc_suffix(corsicana::internal::node<T>* node) {
         // root is the suffix of itself
         if (node == root_node()) {
             node->suffix_link = node;
@@ -111,7 +108,7 @@ private:
                 current_best = current_best->suffix_link;
             }
             // find the longest full word suffix if it exists
-            if (node->suffix_link->word_index != 0) {
+            if (node->suffix_link->word) {
                 node->dict_suffix_link = node->suffix_link;
             }
             else {
@@ -121,9 +118,8 @@ private:
         }
     }
 
-    node<TValue> root;
-    std::unordered_map<int,T> dictionary;
-    int counter = 0;
+    node<T> root;
+    std::vector<T> dictionary;
 };
 } // namespace internal
 } // namespace corsicana

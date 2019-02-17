@@ -11,12 +11,15 @@ namespace internal {
 // API subject to change. Not intended for general usage.
 template <class T>
 struct node {
+
+    using TValue = typename T::value_type;
+
     // map of all children to this node
-    std::unordered_map<T, std::unique_ptr<node<T>>> children;
+    std::unordered_map<TValue, std::unique_ptr<node<T>>> children;
     // node value
-    T value;
-    // word index back to dictionary if this node marks the end of a word
-    int word_index = 0;
+    TValue value;
+    // pointer back to the full word
+    const T* word = nullptr;
     // link back up to the parent
     node<T>* parent = nullptr;
     // link to the longest substring in the trie
