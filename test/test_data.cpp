@@ -8,7 +8,7 @@ TEST_CASE("Data Insert", "[corsicana.internal.data.insert]") {
         corsicana::internal::data<std::string> data;
         std::string str("hello world");
         data.insert(str);
-        REQUIRE(data.get(1) == str);
+        REQUIRE(data.size() == 1);
     }
 }
 

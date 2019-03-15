@@ -42,7 +42,7 @@ public:
         // verify that we are at the same position
         if (text_position != rhs.text_position) { return false; }
         if (current_dict_match != rhs.current_dict_match) { return false; }
-        if (current_word_index != rhs.current_word_index) { return false; }
+        if (current_word != rhs.current_word) { return false; }
         return true;
     }
 
@@ -56,7 +56,7 @@ public:
         // start by looking at the dict suffix
         // we need to exhaust all of our suffix links before searching further
         if (current_dict_match != nullptr) {
-            current_word_index = current_dict_match->word_index;
+            current_word = current_dict_match->word;
             current_dict_match = current_dict_match->dict_suffix_link;
             return true;
         }
@@ -83,8 +83,8 @@ public:
             }
 
             // if we hit the end of a word then stop there
-            if (current_node->word_index > 0) {
-                current_word_index = current_node->word_index;
+            if (current_node->word) {
+                current_word = current_node->word;
                 current_dict_match = current_node->dict_suffix_link;
                 return true;
             }
@@ -92,19 +92,19 @@ public:
             // if we hit dict suffix to a shorter word, then stop there
             if (current_node->dict_suffix_link != nullptr) {
                 current_dict_match = current_node->dict_suffix_link;
-                current_word_index = current_dict_match->word_index;
+                current_word = current_dict_match->word;
                 current_dict_match = current_dict_match->dict_suffix_link;
                 return true;
             }
         }
         // nothing left
-        current_word_index = 0;
+        current_word = nullptr;
         return false;
     }
 
     // Get the current word pointed at by the current match
     T const& current() const {
-        return const_data->get(current_word_index);
+        return *current_word;
     }
 
 private:
@@ -112,9 +112,9 @@ private:
     const T* text;
     TSize text_position = 0;
     const data<T>* const_data;
-    const node<TValue>* current_node;
-    const node<TValue>* current_dict_match = nullptr;
-    int current_word_index = 0;
+    const node<T>* current_node;
+    const node<T>* current_dict_match = nullptr;
+    const T* current_word = nullptr;
 };
 
 template <class T>
