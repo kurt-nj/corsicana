@@ -3,6 +3,7 @@
 
 #include "corsicana/internal/match_state.hpp"
 #include "corsicana/internal/data.hpp"
+#include "corsicana/basic_result.hpp"
 
 namespace corsicana {
 
@@ -21,7 +22,7 @@ public:
 
     /// Iterator implementation for matching
     /// Implemented as a one-way input iterator
-    class iterator : public std::iterator<std::input_iterator_tag, T>
+    class iterator : public std::iterator<std::input_iterator_tag, basic_result<T>>
     {
         public:
             friend class corsicana::match<T>;
@@ -41,8 +42,8 @@ public:
                 return tmp;
             }
 
-            T const& operator*() const { return state.current(); }
-            const T* operator->() const { return &state.current(); }
+            corsicana::basic_result<T> const& operator*() const { return state.current(); }
+            const corsicana::basic_result<T>* operator->() const { return &state.current(); }
             bool operator==(iterator const& rhs) const { return state == rhs.state; }
             bool operator!=(iterator const& rhs) const { return state != rhs.state; }
         private:
@@ -66,8 +67,8 @@ public:
     }
 
     /// Returns a vector of all matches.
-    std::vector<T> all() const {
-        std::vector<T> output;
+    std::vector<basic_result<T>> all() const {
+        std::vector<basic_result<T>> output;
         auto state = corsicana::internal::match_begin(text, const_data);
         while(state.next()) {
             output.push_back(state.current());

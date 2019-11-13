@@ -1,7 +1,9 @@
 #include "catch.hpp"
-#include "corsicana/trie.hpp"
 #include <iostream>
 #include <utility>
+
+#include "corsicana/trie.hpp"
+#include "corsicana/result_io.hpp"
 
 using namespace Catch::Matchers;
 
@@ -9,7 +11,7 @@ TEST_CASE("Match All", "[corsicana.match.all]") {
     corsicana::trie_builder tbuild;
     auto t = tbuild.insert("hers").insert("his").insert("she").insert("he").build();
     SECTION("matches") {
-        std::vector<std::string> expected = { "she", "he", "hers" };
+        std::vector<corsicana::result> expected = { {"she",1}, {"he",2}, {"hers",2} };
         auto all = t.match("ushers").all();
         REQUIRE_THAT(all, Equals(expected));
     }
@@ -45,15 +47,15 @@ TEST_CASE("Match Iterator", "[corsicana.match.iterator]") {
     corsicana::trie_builder tbuild;
     auto t = tbuild.insert("hers").insert("his").insert("she").insert("he").build();
     SECTION("matches") {
-        std::vector<std::string> expected = { "she", "he", "hers" };
+        std::vector<corsicana::result> expected = { {"she",1}, {"he",2}, {"hers",2} };
         auto match = t.match("ushers");
-        std::vector<std::string> actual(match.begin(), match.end());
+        std::vector<corsicana::result> actual(match.begin(), match.end());
         REQUIRE_THAT(actual, Equals(expected));
     }
     SECTION("matches - std methods") {
-        std::vector<std::string> expected = { "she", "he", "hers" };
+        std::vector<corsicana::result> expected = { {"she",1}, {"he",2}, {"hers",2} };
         auto match = t.match("ushers");
-        std::vector<std::string> actual(std::begin(match), std::end(match));
+        std::vector<corsicana::result> actual(std::begin(match), std::end(match));
         REQUIRE_THAT(actual, Equals(expected));
     }
     SECTION("no matches") {
@@ -63,8 +65,8 @@ TEST_CASE("Match Iterator", "[corsicana.match.iterator]") {
     SECTION("iterator dereference") {
         auto match = t.match("ushers");
         auto it = match.begin();
-        REQUIRE(*it == "she");
-        REQUIRE(it->compare("she") == 0);
+        REQUIRE(*it == corsicana::result{"she",1});
+        REQUIRE(it->match.compare("she") == 0);
     }
     SECTION("iterator copy") {
         auto match = t.match("ushers");
@@ -80,7 +82,6 @@ TEST_CASE("Match Iterator", "[corsicana.match.iterator]") {
     }
     SECTION("iterator is swappable") {
         REQUIRE(std::is_move_assignable<corsicana::match<std::string>::iterator>::value);
-        std::vector<std::string> expected = { "she", "he", "hers" };
         auto match = t.match("ushers");
         auto it1 = match.begin();
         auto it2 = match.end();
@@ -94,6 +95,6 @@ TEST_CASE("Match Iterator", "[corsicana.match.iterator]") {
 TEST_CASE("Match Overlap") {
     corsicana::trie_builder tbuild;
     auto t = tbuild.insert("he").insert("hehehehe").build();
-    std::vector<std::string> expected = { "he", "he", "he", "hehehehe", "he", "hehehehe", "he" };
+    std::vector<corsicana::result> expected = { {"he",0}, {"he",2}, {"he",4}, {"hehehehe",0}, {"he",6}, {"hehehehe",2}, {"he",8} };
     REQUIRE_THAT(t.match("hehehehehe").all(), Equals(expected));
 }

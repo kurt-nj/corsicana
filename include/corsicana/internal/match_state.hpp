@@ -3,6 +3,7 @@
 
 #include "corsicana/internal/data.hpp"
 #include "corsicana/internal/node.hpp"
+#include "corsicana/basic_result.hpp"
 
 namespace corsicana {
 namespace internal {
@@ -42,7 +43,7 @@ public:
         // verify that we are at the same position
         if (text_position != rhs.text_position) { return false; }
         if (current_dict_match != rhs.current_dict_match) { return false; }
-        if (current_word != rhs.current_word) { return false; }
+        if (current_result != rhs.current_result) { return false; }
         return true;
     }
 
@@ -56,7 +57,7 @@ public:
         // start by looking at the dict suffix
         // we need to exhaust all of our suffix links before searching further
         if (current_dict_match != nullptr) {
-            current_word = current_dict_match->word;
+            set_current(current_dict_match->word);
             current_dict_match = current_dict_match->dict_suffix_link;
             return true;
         }
@@ -84,7 +85,7 @@ public:
 
             // if we hit the end of a word then stop there
             if (current_node->word) {
-                current_word = current_node->word;
+                set_current(current_node->word);
                 current_dict_match = current_node->dict_suffix_link;
                 return true;
             }
@@ -92,29 +93,35 @@ public:
             // if we hit dict suffix to a shorter word, then stop there
             if (current_node->dict_suffix_link != nullptr) {
                 current_dict_match = current_node->dict_suffix_link;
-                current_word = current_dict_match->word;
+                set_current(current_dict_match->word);
                 current_dict_match = current_dict_match->dict_suffix_link;
                 return true;
             }
         }
         // nothing left
-        current_word = nullptr;
+        set_current(nullptr);
         return false;
     }
 
     // Get the current word pointed at by the current match
-    T const& current() const {
-        return *current_word;
+    corsicana::basic_result<T> const& current() const {
+        return current_result;
     }
 
 private:
-
     const T* text;
     TSize text_position = 0;
     const data<T>* const_data;
     const node<T>* current_node;
     const node<T>* current_dict_match = nullptr;
+    // last match
     const T* current_word = nullptr;
+    corsicana::basic_result<T> current_result;
+    // helper method to set last match
+    void set_current(const T* match) {
+        current_result.match = (match != nullptr) ? T{*match} : T{};
+        current_result.match_position = text_position - current_result.match.size();
+    }
 };
 
 template <class T>
