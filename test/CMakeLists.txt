@@ -3,12 +3,13 @@
 # Test Source
 ##############################################
 SET(TEST_SRC
-    test_main.cpp
-    test_match.cpp
-    test_match_state.cpp
-    test_data.cpp
+    test_basic_result.cpp
     test_basic_trie_builder.cpp
     test_basic_trie.cpp
+    test_data.cpp
+    test_main.cpp
+    test_match_state.cpp
+    test_match.cpp
     test_trie_types.cpp
 )
 
