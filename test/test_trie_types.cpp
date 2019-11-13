@@ -1,7 +1,18 @@
 #include "catch.hpp"
 #include "corsicana/trie.hpp"
+#include <iostream>
 
 using namespace Catch::Matchers;
+
+// make a custom stream operator that doesn't attempt to print the match
+// for most of these tests the trie types are not compatible with the default ostream.
+namespace corsicana {
+template <class T>
+std::ostream& operator<<(std::ostream& out, corsicana::basic_result<T> const& result) {
+    out << result.match_position;
+    return out;
+}
+}
 
 TEST_CASE("Wide Trie", "[corsicana.wtrie]") {
     // War and Peace by Leo Tolstoy
@@ -24,7 +35,7 @@ TEST_CASE("U16 Trie", "[corsicana.u16trie]") {
     corsicana::u16trie_builder u16t_build;
     auto u16t = u16t_build.insert(u"լավարար").insert(u"Այեպհս").insert(u"NOT ARMENIAN?").build();
     auto all = u16t.match(pattern).all();
-    std::vector<corsicana::u16result> expected = { {u"լավարար",0}, {u"Այեպհս",10}, {u"Այեպհս",20} };
+    std::vector<corsicana::u16result> expected = { {u"լավարար",20}, {u"Այեպհս",57}, {u"Այեպհս",87} };
     REQUIRE_THAT(all, Equals(expected));
 }
 

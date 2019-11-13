@@ -43,7 +43,7 @@ public:
         // verify that we are at the same position
         if (text_position != rhs.text_position) { return false; }
         if (current_dict_match != rhs.current_dict_match) { return false; }
-        if (current_result != rhs.current_result) { return false; }
+        if (current_word != rhs.current_word) { return false; }
         return true;
     }
 
@@ -119,6 +119,7 @@ private:
     corsicana::basic_result<T> current_result;
     // helper method to set last match
     void set_current(const T* match) {
+        current_word = match;
         current_result.match = (match != nullptr) ? T{*match} : T{};
         current_result.match_position = text_position - current_result.match.size();
     }
