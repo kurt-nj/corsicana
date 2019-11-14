@@ -21,5 +21,5 @@ TEST_CASE("Result Streaming" "[basic_result.<<]") {
     corsicana::basic_result<std::string> r { "example", 9000 };
     std::stringstream ss;
     ss << r;
-
+    REQUIRE(ss.str() == "example:9000")
 }

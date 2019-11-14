@@ -41,7 +41,7 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
     ############################################
-    # Linux GCC 7 and code coverage generation
+    # Linux GCC 7
     ############################################
     - os: linux
       compiler: gcc
@@ -51,10 +51,36 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+    ############################################
+    # Linux GCC 8
+    ############################################
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+      env:
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+    ############################################
+    # Linux GCC 9 and code coverage generation
+    ############################################
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-9
             - lcov
       env:
         - CODE_COVERAGE=ON
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
     ############################################
     # OSX Builds
     ############################################
@@ -67,6 +93,9 @@ matrix:
     - os: osx
       compiler: clang
       osx_image: xcode10
+    - os: osx
+      compiler: clang
+      osx_image: xcode11
 before_install:
   - eval "${MATRIX_EVAL}"
 script:
