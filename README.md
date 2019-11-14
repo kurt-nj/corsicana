@@ -37,7 +37,7 @@ There are a number of different ways to search on a frozen trie
 ```
 auto match = my_trie.match("Input Text");
 // get all matches at once
-vector<string> all = match.all();
+vector<corsicana::result> all = match.all();
 ```
 ```
 auto match = my_trie.match("Input Text");
