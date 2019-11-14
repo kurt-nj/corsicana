@@ -4,3 +4,4 @@ cmake-build-debug/
 
 # various IDE project directories
 .idea/
+.vscode/
