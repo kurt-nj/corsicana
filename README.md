@@ -11,21 +11,21 @@ algorithm. It aims to be reasonably fast and thread safe.
 ### Trie Construction
 
 Construct a match trie in one of the following manners. New patterns cannot be added to a trie once it is built.
-```
+```c++
 corsicana::trie_builder my_trie_builder;
 auto my_trie = my_trie_builder.insert("pattern one")
                               .insert("pattern two")
                               .build();
 ```
-```
+```c++
 corsicana::trie_builder my_trie_builder;
 auto my_trie = my_trie_builder.insert(container.begin(), container.end()).build();
 ```
-```
+```c++
 corsicana::trie_builder my_trie_builder(container.begin(), container.end());
 auto my_trie = my_trie_builder.build();
 ```
-```
+```c++
 corsicana::trie_builder my_trie_builder = { "one", "two", "three" };
 auto my_trie = my_trie_builder.build();
 ```
@@ -34,22 +34,22 @@ auto my_trie = my_trie_builder.build();
 
 There are a number of different ways to search on a frozen trie
 
-```
+```c++
 auto match = my_trie.match("Input Text");
 // get all matches at once
 vector<corsicana::result> all = match.all();
 ```
-```
+```c++
 auto match = my_trie.match("Input Text");
 // get the count of matches
 int total = match.count();
 ```
-```
+```c++
 auto match = my_trie.match("Input Text");
 // return true if we can find any matches
 bool any_there = match.any();
 ```
-```
+```c++
 auto match = my_trie.match("Input Text");
 // or iterate over them one at a time
 for (auto const& m : match) {
