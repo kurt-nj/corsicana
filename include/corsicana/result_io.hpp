@@ -10,8 +10,8 @@ namespace corsicana {
 /// Assumes that the trie type has stream operator available
 template <class CharType, class CharTrait, class T>
 std::basic_ostream<CharType, CharTrait>&
-operator<<(std::basic_ostream<CharType, CharTrait>& out, basic_result<T> const& result) {
-    out << result.match << ":" << result.match_position;
+operator<<(std::basic_ostream<CharType, CharTrait>& out, basic_result<T> const& res) {
+    out << res.match << ":" << res.match_position;
     return out;
 }
 
