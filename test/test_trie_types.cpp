@@ -8,8 +8,8 @@ using namespace Catch::Matchers;
 // for most of these tests the trie types are not compatible with the default ostream.
 namespace corsicana {
 template <class T>
-std::ostream& operator<<(std::ostream& out, corsicana::basic_result<T> const& result) {
-    out << result.match_position;
+std::ostream& operator<<(std::ostream& out, corsicana::basic_result<T> const& res) {
+    out << res.match_position;
     return out;
 }
 }

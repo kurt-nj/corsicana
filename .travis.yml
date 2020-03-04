@@ -51,7 +51,9 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-7
+            - lcov
       env:
+        - CODE_COVERAGE=ON
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
     ############################################
     # Linux GCC 8
@@ -77,9 +79,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-9
-            - lcov
       env:
-        - CODE_COVERAGE=ON
         - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
     ############################################
     # OSX Builds
