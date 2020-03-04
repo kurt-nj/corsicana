@@ -41,7 +41,7 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
     ############################################
-    # Linux GCC 7
+    # Linux GCC 7 and code coverage generation
     ############################################
     - os: linux
       compiler: gcc
@@ -67,7 +67,7 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
     ############################################
-    # Linux GCC 9 and code coverage generation
+    # Linux GCC 9
     ############################################
     - os: linux
       compiler: gcc
